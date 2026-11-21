@@ -1,0 +1,1458 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <title>今天吃什麼？｜V4 Firebase 正式版</title>
+    <style>
+      :root {
+        font-family:
+          system-ui,
+          -apple-system,
+          "Noto Sans TC",
+          sans-serif;
+        color: #28332e;
+        background: #faf7ef;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      header {
+        background: #fff;
+        border-bottom: 1px solid #e9e4d9;
+        padding: 17px max(20px, calc((100vw - 1100px) / 2));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      h1 {
+        font-size: 25px;
+        margin: 0;
+      }
+      h2 {
+        margin: 0 0 14px;
+        font-size: 22px;
+      }
+      h3 {
+        margin: 12px 0;
+      }
+      p {
+        line-height: 1.65;
+      }
+      small,
+      .muted {
+        color: #7c827c;
+      }
+      main {
+        max-width: 1100px;
+        margin: auto;
+        padding: 24px 18px 60px;
+      }
+      .panel {
+        background: white;
+        border: 1px solid #eee6da;
+        border-radius: 20px;
+        padding: 23px;
+        margin-bottom: 18px;
+        box-shadow: 0 5px 18px #51452309;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .between {
+        justify-content: space-between;
+      }
+      button,
+      .btn {
+        background: #375c4a;
+        color: white;
+        border: 0;
+        border-radius: 11px;
+        padding: 10px 15px;
+        cursor: pointer;
+        font: inherit;
+      }
+      button:hover {
+        filter: brightness(0.94);
+      }
+      button.secondary {
+        background: #f2eee5;
+        color: #35423b;
+      }
+      button.danger {
+        background: #a34e43;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      input,
+      select,
+      textarea {
+        font: inherit;
+        border: 1px solid #d7d9d3;
+        border-radius: 10px;
+        padding: 10px;
+        background: #fff;
+        max-width: 100%;
+      }
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #416c54;
+      }
+      label {
+        display: block;
+        margin: 9px 0 5px;
+        font-weight: 600;
+      }
+      textarea {
+        width: 100%;
+        min-height: 75px;
+      }
+      input[type="text"],
+      input[type="number"],
+      input[type="date"],
+      input[type="time"],
+      select {
+        width: 100%;
+      }
+      .pill {
+        display: inline-block;
+        background: #e4f1e6;
+        color: #286041;
+        border-radius: 99px;
+        padding: 5px 12px;
+        font-size: 13px;
+      }
+      .closed {
+        background: #f6e6e3;
+        color: #964c3c;
+      }
+      .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+      }
+      .tabs button.active {
+        background: #375c4a;
+        color: #fff;
+      }
+      .tabs button {
+        background: #eae7df;
+        color: #334238;
+      }
+      .menu-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        border-bottom: 1px solid #eee;
+        padding: 12px 0;
+      }
+      .menu-item:last-child {
+        border-bottom: 0;
+      }
+      .menu-item strong {
+        display: block;
+      }
+      .qty {
+        width: 85px !important;
+      }
+      .choices {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .choices label {
+        font-weight: 400;
+        margin: 0;
+        background: #f7f5ef;
+        border-radius: 9px;
+        padding: 8px 10px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .stat {
+        padding: 16px;
+        background: #f6f6f0;
+        border-radius: 12px;
+      }
+      .bag-select {
+        min-width: 110px;
+        width: auto;
+      }
+      .bag-card {
+        border: 1px solid #e6e2d9;
+        border-radius: 14px;
+        padding: 16px;
+        margin: 12px 0;
+        background: #fff;
+      }
+      .bag-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .detail-panel {
+        background: #f7f8f4;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 7px 0;
+      }
+      .detail-panel summary {
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .bag-line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 6px 0;
+        border-bottom: 1px dashed #e4e5df;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      th,
+      td {
+        text-align: left;
+        border-bottom: 1px solid #eae6df;
+        padding: 10px 7px;
+      }
+      .scroll {
+        overflow: auto;
+      }
+      .notice {
+        background: #fff6db;
+        padding: 13px;
+        border-radius: 12px;
+        margin: 15px 0;
+      }
+      .mini {
+        font-size: 13px;
+      }
+      .right {
+        text-align: right;
+      }
+      .pill.warn {
+        background: #fff3cd;
+        color: #7a5b00;
+      }
+      .banner {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 12px max(16px, calc((100vw - 1100px) / 2));
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .banner.error {
+        background: #f8dcd7;
+        color: #7d2c20;
+      }
+      .banner.warn {
+        background: #fff3cd;
+        color: #6b5000;
+      }
+      .banner button {
+        background: transparent;
+        color: inherit;
+        padding: 0 6px;
+        font-size: 20px;
+        line-height: 1;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        max-width: min(92vw, 520px);
+        padding: 12px 18px;
+        border-radius: 12px;
+        color: #fff;
+        background: #375c4a;
+        box-shadow: 0 8px 24px #0003;
+        z-index: 50;
+        font-size: 15px;
+      }
+      .toast.warn {
+        background: #8a6a12;
+      }
+      .toast.error {
+        background: #a34e43;
+      }
+      .my-order {
+        margin: 10px 0;
+      }
+      .hidden {
+        display: none !important;
+      }
+      @media (max-width: 650px) {
+        header {
+          padding: 16px;
+        }
+        main {
+          padding: 16px 12px;
+        }
+        .panel {
+          padding: 16px;
+        }
+        .menu-item {
+          align-items: flex-start;
+        }
+        .tabs {
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          scrollbar-width: none;
+          position: sticky;
+          top: 0;
+          z-index: 5;
+          background: #faf7ef;
+          margin: 0 -12px 14px;
+          padding: 8px 12px;
+        }
+        .tabs::-webkit-scrollbar {
+          display: none;
+        }
+        .tabs button {
+          flex: 0 0 auto;
+          white-space: nowrap;
+          padding: 12px 16px;
+        }
+        h1 {
+          font-size: 21px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>🍱 今天吃什麼？</h1>
+        <small>V4 Firebase 正式版 · 正餐＋飲料</small>
+      </div>
+      <div class="row">
+        <span class="pill" id="connection">正在連接 Firebase...</span
+        ><span id="identity"></span
+        ><button class="secondary" id="authButton" onclick="showLogin()">
+          管理員登入
+        </button>
+      </div>
+    </header>
+    <div id="banner" class="banner hidden" role="alert"></div>
+    <main>
+      <div class="notice mini">
+        同事可在不同手機／電腦同步訂餐。管理員登入後可開關場次、管理菜單、分袋及匯出。
+      </div>
+      <nav class="tabs" id="tabs">
+        <button data-tab="order" class="active">同事訂餐</button
+        ><button class="admin-only hidden" data-tab="sessions">今日開單</button
+        ><button class="admin-only hidden" data-tab="shops">餐廳／菜單</button
+        ><button class="admin-only hidden" data-tab="records">
+          訂單統計／匯出</button
+        ><button class="admin-only hidden" data-tab="bags">分袋管理</button>
+      </nav>
+      <div id="view"><p>正在連接資料庫...</p></div>
+    </main>
+    <div id="toast" class="toast hidden" role="status"></div>
+    <script>
+      (function () {
+        var toastTimer;
+        window.showBanner = function (msg, kind, key) {
+          var b = document.getElementById("banner");
+          if (!b) return;
+          b.className = "banner " + (kind || "error");
+          b.dataset.key = key || "";
+          b.textContent = "";
+          var t = document.createElement("span");
+          t.textContent = msg;
+          var x = document.createElement("button");
+          x.type = "button";
+          x.textContent = "×";
+          x.setAttribute("aria-label", "關閉提示");
+          x.onclick = function () {
+            b.className = "banner hidden";
+          };
+          b.appendChild(t);
+          b.appendChild(x);
+        };
+        window.hideBanner = function (key) {
+          var b = document.getElementById("banner");
+          if (b && (!key || b.dataset.key === key))
+            b.className = "banner hidden";
+        };
+        window.toast = function (msg, kind) {
+          var el = document.getElementById("toast");
+          if (!el) return;
+          el.textContent = msg;
+          el.className = "toast " + (kind === "ok" ? "" : kind || "");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () {
+            el.className = "toast hidden";
+          }, 4000);
+        };
+        function loadFail(m) {
+          if (!window.__lunchReady)
+            window.showBanner(
+              "網站載入失敗：" +
+                m +
+                "。請重新整理頁面；若持續發生，請通知管理員。",
+              "error",
+              "load",
+            );
+        }
+        window.addEventListener("error", function (e) {
+          loadFail(e.message || "未知錯誤");
+        });
+        window.addEventListener("unhandledrejection", function (e) {
+          loadFail((e.reason && e.reason.message) || "未知錯誤");
+        });
+        setTimeout(function () {
+          var b = document.getElementById("banner");
+          if (!window.__lunchReady && b && b.className.indexOf("hidden") > -1)
+            window.showBanner(
+              "連線時間比平常久，請確認手機或電腦的網路後重新整理頁面。若持續出現，請通知管理員。",
+              "warn",
+              "sync",
+            );
+        }, 10000);
+      })();
+    </script>
+    <script type="module">
+      "use strict";
+      const KEY = "lunch-v4-firebase";
+      const SUG = ["無糖", "一分糖", "微糖", "半糖", "少糖", "正常甜"];
+      const ICE = ["溫", "熱", "常溫", "去冰", "微冰", "少冰", "正常冰"];
+      const sample = () => ({
+        shops: [
+          {
+            id: "meal-demo",
+            type: "meal",
+            name: "示範便當店",
+            items: [
+              { id: "m1", name: "蝦仁炒飯", price: 80 },
+              { id: "m2", name: "肉絲炒飯", price: 80 },
+              { id: "m3", name: "無骨雞排", price: 100 },
+              { id: "m4", name: "香滷雞腿", price: 100 },
+            ],
+            sugars: [],
+            ices: [],
+            toppings: [],
+          },
+          {
+            id: "drink-demo",
+            type: "drink",
+            name: "示範飲料店",
+            items: [
+              { id: "d1", name: "紅茶", price: 30 },
+              { id: "d2", name: "鮮奶茶", price: 55 },
+              { id: "d3", name: "綠茶", price: 30 },
+            ],
+            sugars: [...SUG],
+            ices: [...ICE],
+            toppings: [
+              { id: "t1", name: "波霸", price: 10 },
+              { id: "t2", name: "仙草凍", price: 10 },
+            ],
+          },
+        ],
+        sessions: {
+          meal: {
+            shopId: "meal-demo",
+            open: true,
+            deadline: "",
+            selected: ["m1", "m2", "m3", "m4"],
+          },
+          drink: {
+            shopId: "drink-demo",
+            open: true,
+            deadline: "",
+            selected: ["d1", "d2", "d3"],
+          },
+        },
+        orders: [],
+      });
+      let state = sample();
+      state.shops = [];
+      state.sessions = {
+        meal: { shopId: "", open: false, deadline: "", selected: [] },
+        drink: { shopId: "", open: false, deadline: "", selected: [] },
+      };
+      let tab = "order",
+        shopEdit = null,
+        editingOrder = null,
+        editingId = null,
+        formOpen = false,
+        submitting = false,
+        closedWarned = false;
+      let cart = { meal: [], drink: [] };
+      const $ = (s) => document.querySelector(s),
+        uid = () => Math.random().toString(36).slice(2, 11),
+        esc = (s) =>
+          String(s ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          ),
+        money = (n) => "$" + Number(n || 0).toLocaleString("zh-TW"),
+        save = () => saveConfig(),
+        typeName = (t) => (t === "meal" ? "🍱 正餐" : "🧋 飲料"),
+        shopBy = (id) => state.shops.find((s) => s.id === id),
+        active = (t) => {
+          let x = state.sessions[t];
+          return (
+            x.open &&
+            (!x.deadline || new Date(x.deadline).getTime() > Date.now())
+          );
+        },
+        render = () => {
+          if (!ready) return;
+          formOpen = false;
+          if (!isAdmin && tab !== "order") tab = "order";
+          document
+            .querySelectorAll(".admin-only")
+            .forEach((b) => b.classList.toggle("hidden", !isAdmin));
+          document
+            .querySelectorAll("[data-tab]")
+            .forEach((b) =>
+              b.classList.toggle("active", b.dataset.tab === tab),
+            );
+          $("#view").innerHTML = {
+            order: orderView,
+            sessions: sessionsView,
+            shops: shopsView,
+            records: recordsView,
+            bags: bagsView,
+          }[tab]();
+        };
+      $("#tabs").onclick = (e) => {
+        let b = e.target.closest("[data-tab]");
+        if (b && (!b.classList.contains("admin-only") || isAdmin)) {
+          tab = b.dataset.tab;
+          render();
+        }
+      };
+      const myUid = () => auth?.currentUser?.uid || "";
+      const todayStr = () => new Date().toLocaleDateString("sv-SE");
+      function canChange(o) {
+        let s = state.sessions[o.type];
+        return (
+          !!s &&
+          o.ownerUid === myUid() &&
+          o.date === todayStr() &&
+          s.shopId === o.shopId &&
+          active(o.type)
+        );
+      }
+      function orderSummary(o) {
+        return (o.lines || [])
+          .map(
+            (l) =>
+              esc(l.name) +
+              " × " +
+              l.qty +
+              (l.sugar ? "／" + esc(l.sugar) : "") +
+              (l.ice ? "／" + esc(l.ice) : "") +
+              (l.toppings?.length
+                ? "／" + l.toppings.map((x) => esc(x.name)).join("+")
+                : ""),
+          )
+          .join("<br>");
+      }
+      function myOrderCard(o) {
+        let can = canChange(o);
+        return `<div class="stat my-order"><div class="row between"><strong>${esc(o.person)}｜${typeName(o.type)}｜${esc(o.shopName)}</strong><strong>${money(o.total)}</strong></div><div class="mini" style="margin:8px 0">${orderSummary(o)}</div>${o.note ? `<div class="mini muted">備註：${esc(o.note)}</div>` : ""}<div class="row" style="margin-top:8px">${can ? `<button onclick="showOrder('${o.type}','${o.id}')">修改</button><button class="danger" onclick="removeOrder('${o.id}')">取消訂單</button>` : '<span class="pill closed">已結單，無法修改</span>'}</div></div>`;
+      }
+      function orderView() {
+        let me = myUid(),
+          today = todayStr(),
+          mine = state.orders
+            .filter((o) => o.ownerUid === me)
+            .slice()
+            .sort((a, b) =>
+              String(b.createdAt).localeCompare(String(a.createdAt)),
+            ),
+          todays = mine.filter((o) => o.date === today),
+          earlier = mine.filter((o) => o.date !== today);
+        return `<h2>今日訂餐</h2><div class="grid">${["meal", "drink"]
+          .map((t) => {
+            let s = state.sessions[t],
+              sh = shopBy(s.shopId);
+            return `<section class="panel"><div class="row between"><h3>${typeName(t)}</h3><span class="pill ${active(t) ? "" : "closed"}">${active(t) ? "開放訂餐" : "已結單"}</span></div><p>${esc(sh?.name || "尚未選擇店家")}</p><small>${s.deadline ? "截止：" + esc(s.deadline.replace("T", " ")) : "未設定截止時間"}</small>${active(t) && sh ? `<p><button onclick="showOrder('${t}')">開始訂${t === "meal" ? "餐" : "飲料"}</button></p>` : ""}</section>`;
+          })
+          .join(
+            "",
+          )}</div><section class="panel"><h3>我的訂單（今天）</h3>${todays.length ? todays.map(myOrderCard).join("") : '<p class="muted">今天還沒有送出訂單</p>'}<p class="mini muted">結單前可以修改或取消。訂單綁定在這個瀏覽器，換手機、換瀏覽器或清除瀏覽資料後就看不到也無法修改，請直接通知管理員。</p>${earlier.length ? `<details class="detail-panel"><summary>更早的訂單（${earlier.length} 筆）</summary>${earlier.map(myOrderCard).join("")}</details>` : ""}${isAdmin ? '<p class="mini muted">管理員：全部同事的訂單請到「訂單統計／匯出」查看。</p>' : ""}</section>`;
+      }
+      function rememberedName() {
+        try {
+          return localStorage.getItem("lunch-person") || "";
+        } catch {
+          return "";
+        }
+      }
+      function rememberName(n) {
+        try {
+          localStorage.setItem("lunch-person", n);
+        } catch {}
+      }
+      function friendly(e, ctx) {
+        let c = e?.code || "",
+          m = e?.message || String(e),
+          msg;
+        if (c.includes("permission-denied"))
+          msg =
+            "權限不足（可能剛好已結單、不是你的訂單，或 Firebase 規則尚未更新）";
+        else if (
+          c.includes("unavailable") ||
+          c === "auth/network-request-failed"
+        )
+          msg = "網路不穩定，連不上伺服器，請確認網路後重新整理";
+        else if (
+          c === "auth/operation-not-allowed" ||
+          c === "auth/admin-restricted-operation"
+        )
+          msg =
+            "尚未啟用匿名登入，請管理員到 Firebase Authentication 啟用 Anonymous";
+        else if (
+          [
+            "auth/invalid-credential",
+            "auth/wrong-password",
+            "auth/user-not-found",
+            "auth/invalid-email",
+          ].includes(c)
+        )
+          msg = "帳號或密碼錯誤";
+        else if (c === "auth/too-many-requests")
+          msg = "嘗試次數過多，請稍後再試";
+        else msg = m;
+        return (ctx ? ctx + "：" : "") + msg + (c ? "（" + c + "）" : "");
+      }
+      function refresh() {
+        if (tab === "order" && formOpen) {
+          if (editingOrder && !active(editingOrder) && !closedWarned) {
+            closedWarned = true;
+            toast("這個場次剛剛已結單，目前無法送出", "warn");
+          }
+          return;
+        }
+        if (tab === "shops" && $("#editor")?.innerHTML.trim()) return;
+        render();
+      }
+      function showOrder(t, oid) {
+        let s = state.sessions[t],
+          sh = shopBy(s.shopId),
+          old = null;
+        if (oid) {
+          old = state.orders.find((x) => x.id === oid);
+          if (!old || !canChange(old)) {
+            toast("這筆訂單已無法修改", "warn");
+            render();
+            return;
+          }
+        }
+        if (!active(t) || !sh) {
+          toast("目前沒有開放訂餐", "warn");
+          render();
+          return;
+        }
+        editingOrder = t;
+        editingId = old ? old.id : null;
+        formOpen = true;
+        closedWarned = false;
+        cart[t] = old ? structuredClone(old.lines) : [];
+        $("#view").innerHTML =
+          `<div class="row between"><h2>${old ? "修改訂單｜" : ""}${typeName(t)}｜${esc(sh.name)}</h2><button class="secondary" onclick="render()">返回</button></div><section class="panel"><label>訂餐人姓名</label><input id="person" type="text" placeholder="請輸入姓名" maxlength="50" value="${esc(old ? old.person : rememberedName())}"><label>品項</label><div id="products">${
+            sh.items
+              .filter((i) => s.selected.includes(i.id))
+              .map(
+                (i) =>
+                  `<div class="menu-item"><div><strong>${esc(i.name)}</strong><small>${money(i.price)}</small></div><button onclick="addLine('${t}','${i.id}')">加入</button></div>`,
+              )
+              .join("") || "<p>今天尚無可訂品項</p>"
+          }</div></section><section class="panel"><h3>我的購物清單</h3><div id="cart"></div><label>整筆訂單備註</label><textarea id="orderNote" placeholder="例如：不要香菜、外帶等">${esc(old ? old.note : "")}</textarea><p class="right"><strong id="total">合計 $0</strong></p><button id="submitBtn" onclick="submitOrder('${t}')">${old ? "儲存修改" : "送出訂單"}</button></section>`;
+        drawCart(t);
+      }
+      function addLine(t, id) {
+        let sh = shopBy(state.sessions[t].shopId),
+          i = sh.items.find((x) => x.id === id);
+        cart[t].push({
+          id: uid(),
+          itemId: id,
+          name: i.name,
+          price: i.price,
+          qty: 1,
+          sugar: sh.sugars[0] || "",
+          ice: sh.ices[0] || "",
+          toppings: [],
+        });
+        drawCart(t);
+      }
+      function drawCart(t) {
+        let sh = shopBy(state.sessions[t].shopId),
+          el = $("#cart");
+        if (!el) return;
+        el.innerHTML =
+          cart[t]
+            .map(
+              (l, n) =>
+                `<div class="stat" style="margin:9px 0"><div class="row between"><strong>${esc(l.name)} · ${money(l.price)}</strong><button class="secondary" onclick="cart['${t}'].splice(${n},1);drawCart('${t}')">移除</button></div><label>數量</label><input class="qty" type="number" min="1" max="99" value="${l.qty}" onchange="cart['${t}'][${n}].qty=Math.max(1,Math.min(99,Number(this.value)||1));drawCart('${t}')">${t === "drink" ? `<div class="grid"><div><label>甜度</label><select onchange="cart.drink[${n}].sugar=this.value">${sh.sugars.map((v) => `<option ${v === l.sugar ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div><div><label>冰量／溫度</label><select onchange="cart.drink[${n}].ice=this.value">${sh.ices.map((v) => `<option ${v === l.ice ? "selected" : ""}>${esc(v)}</option>`).join("")}</select></div></div><label>加料（可複選，自動加價）</label><div class="choices">${sh.toppings.map((tp) => `<label><input type="checkbox" ${l.toppings.some((x) => x.id === tp.id) ? "checked" : ""} onchange="toggleTop(${n},'${tp.id}',this.checked)">${esc(tp.name)} +${money(tp.price)}</label>`).join("") || "<small>此店無加料選項</small>"}</div>` : ""}<small>小計 ${money((l.price + l.toppings.reduce((a, b) => a + b.price, 0)) * l.qty)}</small></div>`,
+            )
+            .join("") || '<p class="muted">尚未加入品項</p>';
+        $("#total").textContent =
+          "合計 " +
+          money(
+            cart[t].reduce(
+              (a, l) =>
+                a +
+                (l.price + l.toppings.reduce((v, x) => v + x.price, 0)) * l.qty,
+              0,
+            ),
+          );
+      }
+      function toggleTop(n, id, on) {
+        let l = cart.drink[n],
+          sh = shopBy(state.sessions.drink.shopId),
+          tp = sh.toppings.find((x) => x.id === id);
+        l.toppings = on
+          ? [...l.toppings.filter((x) => x.id !== id), { ...tp }]
+          : l.toppings.filter((x) => x.id !== id);
+        drawCart("drink");
+      }
+      async function submitOrder(t) {
+        if (submitting) return;
+        let person = $("#person").value.trim(),
+          s = state.sessions[t],
+          sh = shopBy(s.shopId);
+        if (!person) return toast("請輸入姓名", "warn");
+        if (!active(t)) return toast("已結單，無法送出", "warn");
+        if (!cart[t].length) return toast("請先加入餐點", "warn");
+        let lines = structuredClone(cart[t]),
+          total = lines.reduce(
+            (a, l) =>
+              a +
+              (l.price + l.toppings.reduce((v, x) => v + x.price, 0)) * l.qty,
+            0,
+          ),
+          note = $("#orderNote").value.trim(),
+          editing = editingId,
+          btn = $("#submitBtn");
+        submitting = true;
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "送出中...";
+        }
+        try {
+          if (editing) {
+            await updateDoc(doc(db, "orders", editing), {
+              person,
+              lines,
+              note,
+              total,
+            });
+          } else {
+            await addDoc(collection(db, "orders"), {
+              ownerUid: auth.currentUser.uid,
+              createdAt: new Date().toISOString(),
+              date: todayStr(),
+              type: t,
+              shopId: sh.id,
+              shopName: sh.name,
+              person,
+              lines,
+              note,
+              total,
+              bag: 1,
+            });
+          }
+          rememberName(person);
+          cart[t] = [];
+          editingId = null;
+          toast(editing ? "✅ 訂單已更新" : "✅ 訂單已送出", "ok");
+          render();
+        } catch (e) {
+          showBanner(
+            friendly(e, editing ? "修改失敗" : "送出失敗"),
+            "error",
+            "submit",
+          );
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = editing ? "儲存修改" : "送出訂單";
+          }
+        } finally {
+          submitting = false;
+        }
+      }
+      async function removeOrder(id) {
+        let o = state.orders.find((x) => x.id === id);
+        if (!o || !(isAdmin || canChange(o))) {
+          toast("這筆訂單已無法取消", "warn");
+          return;
+        }
+        let others = isAdmin && o.ownerUid !== myUid();
+        if (
+          !confirm(
+            others
+              ? "確定刪除「" + o.person + "」的這筆訂單？"
+              : "確定取消這筆訂單？",
+          )
+        )
+          return;
+        try {
+          await deleteDoc(doc(db, "orders", id));
+          toast("已取消訂單", "ok");
+        } catch (e) {
+          showBanner(friendly(e, "取消失敗"), "error", "submit");
+        }
+      }
+      function sessionsView() {
+        return `<h2>每日開單設定</h2><p class="muted">正餐與飲料可各自選店、選擇今日可訂品項、設定結單時間與開關。</p><div class="grid">${[
+          "meal",
+          "drink",
+        ]
+          .map((t) => {
+            let s = state.sessions[t],
+              shops = state.shops.filter((x) => x.type === t),
+              sh = shopBy(s.shopId);
+            return `<section class="panel"><h3>${typeName(t)}</h3><label>今日店家</label><select onchange="setSessionShop('${t}',this.value)"><option value="">請選擇</option>${shops.map((x) => `<option value="${x.id}" ${x.id === s.shopId ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select><label>截止時間（可不填）</label><input type="datetime-local" value="${esc(s.deadline)}" onchange="state.sessions.${t}.deadline=this.value;save();render()"><label class="choices"><input type="checkbox" ${s.open ? "checked" : ""} onchange="state.sessions.${t}.open=this.checked;save();render()">開放訂餐</label><h3>今日可訂品項</h3><div class="row"><button class="secondary" onclick="selectAll('${t}',true)">全選</button><button class="secondary" onclick="selectAll('${t}',false)">全不選</button></div>${sh ? sh.items.map((i) => `<label class="choices"><input type="checkbox" ${s.selected.includes(i.id) ? "checked" : ""} onchange="selectItem('${t}','${i.id}',this.checked)">${esc(i.name)}　${money(i.price)}</label>`).join("") : '<p class="muted">請先選擇店家</p>'}<p><span class="pill ${active(t) ? "" : "closed"}">${active(t) ? "目前開放" : "目前關閉"}</span></p></section>`;
+          })
+          .join("")}</div>`;
+      }
+      function setSessionShop(t, id) {
+        state.sessions[t].shopId = id;
+        state.sessions[t].selected = shopBy(id)?.items.map((i) => i.id) || [];
+        save();
+        render();
+      }
+      function selectAll(t, on) {
+        let s = state.sessions[t];
+        s.selected = on ? shopBy(s.shopId)?.items.map((i) => i.id) || [] : [];
+        save();
+        render();
+      }
+      function selectItem(t, id, on) {
+        let s = state.sessions[t];
+        s.selected = on
+          ? [...new Set([...s.selected, id])]
+          : s.selected.filter((x) => x !== id);
+        save();
+      }
+      function shopsView() {
+        return `<div class="row between"><h2>餐廳與菜單管理</h2><button onclick="newShop()">＋ 新增店家</button></div><div class="grid">${state.shops.map((s) => `<section class="panel"><h3>${esc(s.name)}</h3><p>${typeName(s.type)} · ${s.items.length} 個品項</p><div class="row"><button onclick="editShop('${s.id}')">編輯菜單</button><button class="danger" onclick="deleteShop('${s.id}')">刪除店家</button></div></section>`).join("")}</div><section id="editor"></section>`;
+      }
+      function newShop() {
+        let name = prompt("新店家名稱");
+        if (!name?.trim()) return;
+        let type = confirm(
+          "這是飲料店嗎？\n按「確定」＝飲料店；按「取消」＝正餐店",
+        )
+          ? "drink"
+          : "meal";
+        let sh = {
+          id: uid(),
+          name: name.trim(),
+          type,
+          items: [],
+          sugars: type === "drink" ? [...SUG] : [],
+          ices: type === "drink" ? [...ICE] : [],
+          toppings: [],
+        };
+        state.shops.push(sh);
+        save();
+        render();
+        editShop(sh.id);
+      }
+      function deleteShop(id) {
+        if (!confirm("刪除此店家與菜單？歷史訂單仍會保留。")) return;
+        state.shops = state.shops.filter((x) => x.id !== id);
+        for (let t of ["meal", "drink"])
+          if (state.sessions[t].shopId === id) {
+            state.sessions[t].shopId = "";
+            state.sessions[t].selected = [];
+            state.sessions[t].open = false;
+          }
+        save();
+        render();
+      }
+      function editShop(id) {
+        shopEdit = id;
+        let s = shopBy(id);
+        $("#editor").innerHTML =
+          `<section class="panel"><div class="row between"><h2>編輯｜${esc(s.name)}</h2><button class="secondary" onclick="render()">收起</button></div><label>店家名稱</label><input id="shopName" value="${esc(s.name)}"><h3>菜單品項</h3><p class="mini muted">每行一個品項，格式：名稱,價格</p><textarea id="itemsText" style="min-height:180px">${esc(s.items.map((i) => i.name + "," + i.price).join("\n"))}</textarea>${s.type === "drink" ? `<h3>甜度（勾選此店提供的選項）</h3><div class="choices">${SUG.map((v) => `<label><input type="checkbox" name="sugar" value="${v}" ${s.sugars.includes(v) ? "checked" : ""}>${v}</label>`).join("")}</div><h3>冰量／溫度</h3><div class="choices">${ICE.map((v) => `<label><input type="checkbox" name="ice" value="${v}" ${s.ices.includes(v) ? "checked" : ""}>${v}</label>`).join("")}</div><h3>加料清單</h3><p class="mini muted">每行一種加料，格式：名稱,加價</p><textarea id="topsText">${esc(s.toppings.map((x) => x.name + "," + x.price).join("\n"))}</textarea>` : ""}<p><button onclick="saveShop('${id}')">儲存店家與菜單</button></p></section>`;
+        $("#editor").scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      function parseLines(text) {
+        let out = [],
+          bad = [];
+        text.split(/\r?\n/).forEach((line, n) => {
+          if (!line.trim()) return;
+          let pos = line.lastIndexOf(","),
+            name = line.slice(0, pos).trim(),
+            price = Number(line.slice(pos + 1).trim());
+          if (pos < 1 || !name || !Number.isFinite(price) || price < 0) {
+            bad.push(n + 1);
+            return;
+          }
+          out.push({ name, price });
+        });
+        if (bad.length)
+          throw Error(
+            "第 " + bad.join("、") + " 行格式錯誤，請使用「名稱,價格」",
+          );
+        return out;
+      }
+      function saveShop(id) {
+        let s = shopBy(id);
+        try {
+          let items = parseLines($("#itemsText").value),
+            tops = s.type === "drink" ? parseLines($("#topsText").value) : [];
+          if (!$("#shopName").value.trim()) throw Error("店家名稱不可空白");
+          s.name = $("#shopName").value.trim();
+          s.items = items.map((i) => ({
+            ...i,
+            id: s.items.find((old) => old.name === i.name)?.id || uid(),
+          }));
+          if (s.type === "drink") {
+            s.sugars = [
+              ...document.querySelectorAll("[name=sugar]:checked"),
+            ].map((x) => x.value);
+            s.ices = [...document.querySelectorAll("[name=ice]:checked")].map(
+              (x) => x.value,
+            );
+            s.toppings = tops.map((i) => ({
+              ...i,
+              id: s.toppings.find((old) => old.name === i.name)?.id || uid(),
+            }));
+          }
+          for (let t of ["meal", "drink"])
+            if (state.sessions[t].shopId === id)
+              state.sessions[t].selected = state.sessions[t].selected.filter(
+                (x) => s.items.some((i) => i.id === x),
+              );
+          save();
+          toast("已儲存", "ok");
+          render();
+        } catch (e) {
+          toast(e.message, "warn");
+        }
+      }
+      function recordsView() {
+        let dates = [...new Set(state.orders.map((o) => o.date))]
+          .sort()
+          .reverse();
+        return (
+          `<div class="row between"><h2>訂單統計與 Excel 匯出</h2><div class="row"><button onclick="exportCSV()">匯出 Excel 可開啟的 CSV</button><button class="secondary" onclick="exportBackup()">備份全部資料 JSON</button></div></div><section class="panel"><div class="row"><div><label>日期</label><select id="filterDate" onchange="drawRecords()"><option value="all">全部日期</option>${dates.map((d) => `<option>${d}</option>`).join("")}</select></div><div><label>類型</label><select id="filterType" onchange="drawRecords()"><option value="all">全部</option><option value="meal">正餐</option><option value="drink">飲料</option></select></div></div><div id="report"></div></section><section class="panel"><h3>資料管理</h3><p class="muted mini">資料保存在 Firebase。可下載 JSON 備份；正式版不提供整批覆寫／清空資料。</p></section>` +
+          (setTimeout(drawRecords, 0), "")
+        );
+      }
+      function filtered() {
+        let d = $("#filterDate")?.value || "all",
+          t = $("#filterType")?.value || "all";
+        return state.orders.filter(
+          (o) => (d === "all" || o.date === d) && (t === "all" || o.type === t),
+        );
+      }
+      function drawRecords() {
+        let e = $("#report");
+        if (!e) return;
+        let orders = filtered(),
+          sum = orders.reduce((a, o) => a + o.total, 0),
+          counts = {};
+        for (let o of orders)
+          for (let l of o.lines) {
+            let k = [
+              o.shopName,
+              l.name,
+              l.sugar,
+              l.ice,
+              (l.toppings || []).map((t) => t.name).join("+"),
+            ].join(" / ");
+            counts[k] = (counts[k] || 0) + l.qty;
+          }
+        e.innerHTML = `<div class="grid" style="margin:18px 0"><div class="stat"><small>訂單筆數</small><h2>${orders.length}</h2></div><div class="stat"><small>總金額</small><h2>${money(sum)}</h2></div></div><h3>餐點數量統計</h3><div class="scroll"><table><tr><th>餐點與規格</th><th>數量</th></tr>${
+          Object.entries(counts)
+            .map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`)
+            .join("") || '<tr><td colspan="2">沒有資料</td></tr>'
+        }</table></div><h3>每人訂單明細（點擊展開／收起）</h3>${orders.map((o) => `<details class="detail-panel"><summary>${esc(o.person)}｜${typeName(o.type)}｜${esc(o.shopName)}｜${money(o.total)}　<span class="muted mini">${esc(o.date)} · 第${Number(o.bag || 1)}袋</span></summary><div class="scroll"><table><tr><th>餐點</th><th>規格</th><th>數量</th><th>小計</th></tr>${o.lines.map((l) => `<tr><td>${esc(l.name)}</td><td>${esc([l.sugar, l.ice, (l.toppings || []).map((x) => x.name).join("+")].filter(Boolean).join("／"))}</td><td>${l.qty}</td><td>${money((Number(l.price) + (l.toppings || []).reduce((a, x) => a + Number(x.price), 0)) * l.qty)}</td></tr>`).join("")}</table></div><p class="mini">備註：${esc(o.note || "無")}</p><p><button class="danger" onclick="removeOrder('${o.id}')">刪除此訂單</button></p></details>`).join("") || '<p class="muted">沒有資料</p>'}`;
+      }
+      // 分袋管理：依日期、正餐／飲料、店家分組；整筆訂單（同一人）分配一袋。
+      let bagFilter = { date: "all", type: "meal", shop: "all" };
+      function bagOrders() {
+        return state.orders.filter(
+          (o) =>
+            (bagFilter.date === "all" || o.date === bagFilter.date) &&
+            o.type === bagFilter.type &&
+            (bagFilter.shop === "all" || o.shopId === bagFilter.shop),
+        );
+      }
+      function bagNum(o) {
+        let n = Number(o.bag);
+        return Number.isInteger(n) && n >= 1 && n <= 999 ? n : 1;
+      }
+      async function setBag(id, v) {
+        let n = Number(v);
+        if (!Number.isInteger(n) || n < 1 || n > 999) {
+          toast("袋號請輸入 1～999", "warn");
+          render();
+          return;
+        }
+        let o = state.orders.find((x) => x.id === id);
+        if (o && isAdmin) {
+          try {
+            await updateDoc(doc(db, "orders", id), { bag: n });
+          } catch (e) {
+            showBanner(friendly(e, "更新袋號失敗"), "error", "bag");
+          }
+        }
+      }
+      function bagSummary(orders) {
+        let groups = new Map();
+        for (let o of orders) {
+          let n = bagNum(o),
+            key = o.date + "|" + o.shopId + "|" + n;
+          if (!groups.has(key))
+            groups.set(key, {
+              date: o.date,
+              shop: o.shopName,
+              bag: n,
+              orders: [],
+            });
+          groups.get(key).orders.push(o);
+        }
+        return [...groups.values()].sort(
+          (a, b) =>
+            a.date.localeCompare(b.date) ||
+            a.shop.localeCompare(b.shop) ||
+            a.bag - b.bag,
+        );
+      }
+      function bagsView() {
+        let dates = [...new Set(state.orders.map((o) => o.date))]
+            .sort()
+            .reverse(),
+          shops = [
+            ...new Map(
+              state.orders
+                .filter((o) => o.type === bagFilter.type)
+                .map((o) => [o.shopId, o.shopName]),
+            ).entries(),
+          ];
+        if (
+          bagFilter.shop !== "all" &&
+          !shops.some(([id]) => id === bagFilter.shop)
+        )
+          bagFilter.shop = "all";
+        let orders = bagOrders(),
+          groups = bagSummary(orders);
+        return `<div class="row between"><h2>🛍️ 分袋管理</h2><div class="row"><button onclick="exportBags()">匯出分袋清單 CSV</button></div></div><p class="muted">每筆訂單可指定第幾袋；同一人一筆訂單的所有品項會放在同一袋。正餐與飲料分開統計，並按日期、店家區分。</p><section class="panel"><div class="grid"><div><label>日期</label><select onchange="bagFilter.date=this.value;render()"><option value="all">全部日期</option>${dates.map((d) => `<option value="${esc(d)}" ${bagFilter.date === d ? "selected" : ""}>${esc(d)}</option>`).join("")}</select></div><div><label>類型</label><select onchange="bagFilter.type=this.value;bagFilter.shop='all';render()"><option value="meal" ${bagFilter.type === "meal" ? "selected" : ""}>🍱 正餐</option><option value="drink" ${bagFilter.type === "drink" ? "selected" : ""}>🧋 飲料</option></select></div><div><label>店家</label><select onchange="bagFilter.shop=this.value;render()"><option value="all">全部店家</option>${shops.map(([id, name]) => `<option value="${esc(id)}" ${bagFilter.shop === id ? "selected" : ""}>${esc(name)}</option>`).join("")}</select></div></div><h3>指定每人袋號</h3><div class="scroll"><table><tr><th>日期</th><th>姓名</th><th>店家</th><th>餐點</th><th>袋號</th></tr>${orders.map((o) => `<tr><td>${esc(o.date)}</td><td>${esc(o.person)}</td><td>${esc(o.shopName)}</td><td>${o.lines.map((l) => esc(l.name) + " × " + l.qty).join("、")}</td><td><input class="bag-select" type="number" min="1" max="999" value="${bagNum(o)}" onchange="setBag('${o.id}',this.value)" aria-label="${esc(o.person)}的袋號"></td></tr>`).join("") || '<tr><td colspan="5">目前沒有訂單</td></tr>'}</table></div></section><section class="panel" id="bagPrint"><h2>電話訂餐用清單</h2>${
+          groups
+            .map((g) => {
+              let total = g.orders.reduce((a, o) => a + o.total, 0),
+                qty = g.orders.reduce(
+                  (a, o) => a + o.lines.reduce((v, l) => v + l.qty, 0),
+                  0,
+                ),
+                lines = new Map();
+              for (let o of g.orders)
+                for (let l of o.lines) {
+                  let spec = [
+                      l.sugar,
+                      l.ice,
+                      (l.toppings || []).map((x) => x.name).join("+"),
+                    ]
+                      .filter(Boolean)
+                      .join("／"),
+                    k = l.name + "|" + spec;
+                  if (!lines.has(k))
+                    lines.set(k, { name: l.name, spec, qty: 0, people: [] });
+                  let item = lines.get(k);
+                  item.qty += Number(l.qty);
+                  item.people.push(o.person + " × " + l.qty);
+                }
+              return `<div class="bag-card"><div class="bag-head"><h3>第 ${g.bag} 袋｜${esc(g.shop)}</h3><span class="pill">${esc(g.date)} · ${g.orders.length} 筆 · ${qty} 份</span></div><p class="mini"><strong>人員：</strong>${g.orders.map((o) => esc(o.person)).join("、")}</p>${[...lines.values()].map((l) => `<div class="bag-line"><div><strong>${esc(l.name)} × ${l.qty}</strong>${l.spec ? `<small>｜${esc(l.spec)}</small>` : ""}<div class="mini muted">${l.people.map(esc).join("、")}</div></div></div>`).join("")}<p class="right"><strong>本袋合計 ${money(total)}</strong></p>${g.orders
+                .filter((o) => o.note)
+                .map(
+                  (o) =>
+                    `<p class="mini">${esc(o.person)}備註：${esc(o.note)}</p>`,
+                )
+                .join("")}</div>`;
+            })
+            .join("") || '<p class="muted">尚無可分袋訂單</p>'
+        }</section>`;
+      }
+      function exportBags() {
+        let rows = [
+          [
+            "日期",
+            "類型",
+            "店家",
+            "袋號",
+            "姓名",
+            "餐點",
+            "甜度",
+            "冰量",
+            "加料",
+            "數量",
+            "小計",
+            "備註",
+          ],
+        ];
+        for (let o of bagOrders())
+          for (let l of o.lines) {
+            rows.push([
+              o.date,
+              o.type === "meal" ? "正餐" : "飲料",
+              o.shopName,
+              bagNum(o),
+              o.person,
+              l.name,
+              l.sugar || "",
+              l.ice || "",
+              (l.toppings || []).map((t) => t.name).join("+"),
+              l.qty,
+              (Number(l.price) +
+                (l.toppings || []).reduce((a, x) => a + Number(x.price), 0)) *
+                l.qty,
+              o.note || "",
+            ]);
+          }
+        download(
+          "分袋清單-" + new Date().toLocaleDateString("sv-SE") + ".csv",
+          "\ufeff" + rows.map((r) => r.map(csvCell).join(",")).join("\r\n"),
+          "text/csv;charset=utf-8",
+        );
+      }
+      function download(name, content, type) {
+        let blob = new Blob([content], { type }),
+          a = document.createElement("a"),
+          url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = name;
+        document.body.append(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
+      }
+      function csvCell(v) {
+        let s = String(v ?? "");
+        if (/^[=+@\-\t\r]/.test(s)) s = "'" + s;
+        return '"' + s.replace(/"/g, '""') + '"';
+      }
+      function exportCSV() {
+        let rows = [
+          [
+            "日期",
+            "時間",
+            "類型",
+            "店家",
+            "姓名",
+            "餐點",
+            "單價",
+            "數量",
+            "甜度",
+            "冰量／溫度",
+            "加料",
+            "加料單價合計",
+            "小計",
+            "整筆備註",
+          ],
+        ];
+        for (let o of filtered())
+          for (let l of o.lines) {
+            let top = l.toppings.reduce((a, x) => a + x.price, 0);
+            rows.push([
+              o.date,
+              o.createdAt,
+              o.type === "meal" ? "正餐" : "飲料",
+              o.shopName,
+              o.person,
+              l.name,
+              l.price,
+              l.qty,
+              l.sugar,
+              l.ice,
+              l.toppings.map((x) => x.name).join("+"),
+              top,
+              (l.price + top) * l.qty,
+              o.note,
+            ]);
+          }
+        download(
+          "訂餐明細-" + new Date().toLocaleDateString("sv-SE") + ".csv",
+          "\ufeff" + rows.map((r) => r.map(csvCell).join(",")).join("\r\n"),
+          "text/csv;charset=utf-8",
+        );
+      }
+      function exportBackup() {
+        if (!isAdmin) return;
+        download(
+          "訂餐雲端備份.json",
+          JSON.stringify(state, null, 2),
+          "application/json",
+        );
+      }
+      const firebaseModule =
+        "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+      const authModule =
+        "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+      const dbModule =
+        "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+      const [
+        { initializeApp },
+        {
+          getAuth,
+          onAuthStateChanged,
+          signInAnonymously,
+          signInWithEmailAndPassword,
+          signOut,
+        },
+        {
+          getFirestore,
+          doc,
+          getDoc,
+          setDoc,
+          collection,
+          addDoc,
+          deleteDoc,
+          updateDoc,
+          onSnapshot,
+          query,
+          where,
+        },
+      ] = await Promise.all([
+        import(firebaseModule),
+        import(authModule),
+        import(dbModule),
+      ]);
+      const { firebaseConfig } = await import("./firebase-config.js");
+      const app = initializeApp(firebaseConfig),
+        auth = getAuth(app),
+        db = getFirestore(app);
+      let listenGen = 0,
+        ready = false,
+        isAdmin = false,
+        unsubConfig = null,
+        unsubOrders = null,
+        cloudConfig = null,
+        configWrite = Promise.resolve();
+      const isConfigured = () =>
+        firebaseConfig.apiKey && !firebaseConfig.apiKey.includes("PASTE_");
+      function status(s) {
+        let el = document.getElementById("connection");
+        el.textContent = s;
+        el.className =
+          "pill" +
+          (/失敗|尚未/.test(s)
+            ? " closed"
+            : /同步中|連接|切換/.test(s)
+              ? " warn"
+              : "");
+      }
+      function showLogin() {
+        let u = auth.currentUser;
+        if (u && !u.isAnonymous) {
+          if (confirm(isAdmin ? "要登出管理員嗎？" : "要登出這個帳號嗎？"))
+            signOut(auth);
+          return;
+        }
+        let email = prompt("管理員帳號（Email）");
+        if (!email) return;
+        let password = prompt("管理員密碼（不會存入網站）");
+        if (!password) return;
+        signInWithEmailAndPassword(auth, email.trim(), password).catch((e) =>
+          showBanner(friendly(e, "登入失敗"), "error", "login"),
+        );
+      }
+      window.showLogin = showLogin;
+      async function saveConfig() {
+        if (!isAdmin) {
+          toast("只有管理員可以修改設定", "warn");
+          return;
+        }
+        let payload = {
+          shops: structuredClone(state.shops),
+          sessions: structuredClone(state.sessions),
+        };
+        configWrite = configWrite
+          .then(() => setDoc(doc(db, "public", "config"), payload))
+          .catch((e) => {
+            showBanner(friendly(e, "儲存設定失敗"), "error", "save");
+            throw e;
+          });
+        try {
+          await configWrite;
+        } catch {
+          configWrite = Promise.resolve();
+        }
+      }
+      function subscribeData(user) {
+        const gen = ++listenGen;
+        if (unsubConfig) unsubConfig();
+        if (unsubOrders) unsubOrders();
+        ready = false;
+        status("同步中...");
+        unsubConfig = onSnapshot(
+          doc(db, "public", "config"),
+          (snap) => {
+            if (snap.exists()) {
+              let data = snap.data();
+              state.shops = data.shops || [];
+              state.sessions = data.sessions || state.sessions;
+            } else {
+              state.shops = [];
+              state.sessions = {
+                meal: { shopId: "", open: false, deadline: "", selected: [] },
+                drink: { shopId: "", open: false, deadline: "", selected: [] },
+              };
+            }
+            ready = true;
+            window.__lunchReady = true;
+            hideBanner("sync");
+            status("已連線");
+            refresh();
+          },
+          (e) => {
+            if (gen !== listenGen) return;
+            status("資料讀取失敗");
+            showBanner(friendly(e, "無法讀取店家與菜單設定"), "error", "sync");
+          },
+        );
+        let q = isAdmin
+          ? query(collection(db, "orders"))
+          : query(collection(db, "orders"), where("ownerUid", "==", user.uid));
+        unsubOrders = onSnapshot(
+          q,
+          (snap) => {
+            state.orders = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+            if (ready) refresh();
+          },
+          (e) => {
+            if (gen !== listenGen) return;
+            status("訂單同步失敗");
+            showBanner(friendly(e, "無法讀取訂單"), "error", "sync");
+          },
+        );
+      }
+      onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+          isAdmin = false;
+          listenGen++;
+          if (unsubConfig) {
+            unsubConfig();
+            unsubConfig = null;
+          }
+          if (unsubOrders) {
+            unsubOrders();
+            unsubOrders = null;
+          }
+          state.orders = [];
+          ready = false;
+          status("切換身分中...");
+          try {
+            await signInAnonymously(auth);
+          } catch (e) {
+            status("登入失敗");
+            showBanner(friendly(e, "登入失敗"), "error", "sync");
+          }
+          return;
+        }
+        // 身分改變時先停止舊監聽，避免用新身分繼續讀舊查詢而被拒絕
+        listenGen++;
+        if (unsubConfig) {
+          unsubConfig();
+          unsubConfig = null;
+        }
+        if (unsubOrders) {
+          unsubOrders();
+          unsubOrders = null;
+        }
+        ready = false;
+        status("同步中...");
+        isAdmin = false;
+        if (!user.isAnonymous) {
+          // 管理員名單存在資料庫：admins/{使用者UID} 文件存在才是管理員
+          try {
+            isAdmin = (await getDoc(doc(db, "admins", user.uid))).exists();
+          } catch (e) {
+            isAdmin = false;
+          }
+          if (auth.currentUser?.uid !== user.uid) return;
+          if (!isAdmin) toast("這個帳號不是管理員，已當作一般同事使用", "warn");
+        }
+        document.getElementById("authButton").textContent = user.isAnonymous
+          ? "管理員登入"
+          : "登出";
+        document.getElementById("identity").textContent = isAdmin
+          ? "管理員模式"
+          : "同事訂餐";
+        subscribeData(user);
+      });
+      if (!isConfigured()) {
+        status("尚未設定 Firebase");
+        showBanner(
+          "尚未設定 Firebase：請先編輯 firebase-config.js，填入 apiKey。",
+          "error",
+          "config",
+        );
+      }
+      // Inline handlers in module scripts are not global: explicitly expose the V4 UI callbacks.
+      Object.assign(window, {
+        showOrder,
+        addLine,
+        drawCart,
+        toggleTop,
+        submitOrder,
+        removeOrder,
+        setSessionShop,
+        selectAll,
+        selectItem,
+        newShop,
+        deleteShop,
+        editShop,
+        saveShop,
+        drawRecords,
+        setBag,
+        exportBags,
+        exportCSV,
+        exportBackup,
+        render,
+        cart,
+        bagFilter,
+        save,
+      });
+      // V4 inline event handlers refer to these variables. Provide live bindings through properties.
+      Object.defineProperty(window, "state", { get: () => state });
+      Object.defineProperty(window, "cart", { get: () => cart });
+    </script>
+  </body>
+</html>
